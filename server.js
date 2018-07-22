@@ -5,7 +5,7 @@ const cors = require('cors')
 const knex = require('knex');
 
 
-const postgres = knex({
+const db = knex({
   client: 'pg',
   connection: {
     host : '127.0.0.1',
@@ -15,12 +15,14 @@ const postgres = knex({
   }
 });
 
-postgres.select('*').from('users');
+db.select('*').from('users').then(data => {
+  console.log(data);
+})
 
 const database = {
   users: [{
     id: '123',
-    name: 'Andrei',
+    name: 'John',
     email: 'john@gmail.com',
     entries: 0,
     joined: new Date()
@@ -30,6 +32,7 @@ const database = {
     hash: 'wghhh'
   }
 }
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -56,14 +59,17 @@ app.post('/findface', (req, res) => {
 
 
 app.post('/register', (req, res) => {
-  database.users.push({
-    id: '124',
-    name: req.body.name,
-    email: req.body.email,
-    entries: 0,
-    joined: new Date()
-  })
-  res.json(database.users[database.users.length - 1])
+  const {email, name, password} = req.body;
+db('users')
+.returning('*')
+.insert({
+  email: email,
+  name: name,
+  joined: new Date()
+}).then(response => {
+  res.json(user[0]);
+})
+.catch(err => res.status(400).json('unable to register'))
 })
 
 app.get('/profile/:userId', (req, res) => {
@@ -76,4 +82,4 @@ app.get('/profile/:userId', (req, res) => {
 
 })
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(3000, () => console.log('listening on port 3000!'))
