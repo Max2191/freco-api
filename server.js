@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
-var bodyParser = require('body-parser')
-var cors = require('cors')
+const bodyParser = require('body-parser')
+const cors = require('cors')
 const knex = require('knex');
 
 
