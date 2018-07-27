@@ -1,8 +1,8 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const knex = require('knex');
-
+const express = require('express');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
+const cors = require('cors');
+const knex = require('knex')
 
 const db = knex({
   client: 'pg',
@@ -10,23 +10,18 @@ const db = knex({
     host : '127.0.0.1',
     user : 'postgres',
     password : 'sith2191',
-    database : 'frecodb'
+    database : 'db'
   }
 });
+
 const app = express();
 
-
-
-
-app.use(cors());
+app.use(cors())
 app.use(bodyParser.json());
 
-
 app.get('/', (req, res)=> {
-  res.send(database.users);
+  res.send(db.users);
 })
-
-
 
 app.post('/signin', (req, res) => {
   db.select('email', 'hash').from('login')
@@ -98,6 +93,7 @@ app.put('/image', (req, res) => {
   })
   .catch(err => res.status(400).json('unable to get entries'))
 })
-})
 
-app.listen(3000, () => console.log('listening on port 3000!'))
+app.listen(3000, ()=> {
+  console.log('app is running on port 3000');
+})
