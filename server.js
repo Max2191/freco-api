@@ -14,10 +14,8 @@ const image = require('./Controllers/image');
 const db = knex({
   client: 'pg',
   connection: {
-    host : 'postgresql-slippery-46304',
-    user : 'Max',
-    password : '',
-    database : 'db'
+    host : process.env.DATABASE_URL,
+    ssl: true
   }
 });
 
